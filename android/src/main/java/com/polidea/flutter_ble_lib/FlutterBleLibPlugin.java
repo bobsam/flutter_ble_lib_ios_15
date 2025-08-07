@@ -61,13 +61,6 @@ public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, Ac
 
     static MethodChannel channel;
 
-    // private static FlutterBleLibPlugin factory(Context context, Activity activity) {
-    //     FlutterBleLibPlugin plugin = new FlutterBleLibPlugin();
-    //     plugin.context = context;
-    //     plugin.activity = activity;
-    //     return plugin;
-    // }
-
     /**
      * Initializes the plugin.
      *
@@ -75,6 +68,9 @@ public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, Ac
      * @param messenger     registrar.messenger() or binding.getBinaryMessenger()
      */
     private void init(Context context, BinaryMessenger messenger, Activity activity) {
+        this.context = context;
+        this.activity = activity;
+        
         channel = new MethodChannel(messenger, ChannelName.FLUTTER_BLE_LIB);
 
         final EventChannel bluetoothStateChannel = new EventChannel(messenger, ChannelName.ADAPTER_STATE_CHANGES);
@@ -83,15 +79,13 @@ public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, Ac
         final EventChannel connectionStateChannel = new EventChannel(messenger, ChannelName.CONNECTION_STATE_CHANGE_EVENTS);
         final EventChannel characteristicMonitorChannel = new EventChannel(messenger, ChannelName.MONITOR_CHARACTERISTIC);
 
-        final FlutterBleLibPlugin plugin = factory(context, activity);
+        channel.setMethodCallHandler(this);
 
-        channel.setMethodCallHandler(plugin);
-
-        scanningChannel.setStreamHandler(plugin.scanningStreamHandler);
-        bluetoothStateChannel.setStreamHandler(plugin.adapterStateStreamHandler);
-        restoreStateChannel.setStreamHandler(plugin.restoreStateStreamHandler);
-        connectionStateChannel.setStreamHandler(plugin.connectionStateStreamHandler);
-        characteristicMonitorChannel.setStreamHandler(plugin.characteristicsMonitorStreamHandler);
+        scanningChannel.setStreamHandler(this.scanningStreamHandler);
+        bluetoothStateChannel.setStreamHandler(this.adapterStateStreamHandler);
+        restoreStateChannel.setStreamHandler(this.restoreStateStreamHandler);
+        connectionStateChannel.setStreamHandler(this.connectionStateStreamHandler);
+        characteristicMonitorChannel.setStreamHandler(this.characteristicsMonitorStreamHandler);
     }
 
     // public static void registerWith(Registrar registrar) {
