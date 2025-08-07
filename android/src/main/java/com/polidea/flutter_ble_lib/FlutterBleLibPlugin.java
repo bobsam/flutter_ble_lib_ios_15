@@ -42,7 +42,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+// import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
 
@@ -50,6 +50,7 @@ public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, Ac
 
     private BleAdapter bleAdapter;
     private Context context;
+    private Activity activity;
     private AdapterStateStreamHandler adapterStateStreamHandler = new AdapterStateStreamHandler();
     private RestoreStateStreamHandler restoreStateStreamHandler = new RestoreStateStreamHandler();
     private ScanningStreamHandler scanningStreamHandler = new ScanningStreamHandler();
@@ -59,14 +60,13 @@ public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, Ac
     private List<CallDelegate> delegates = new LinkedList<>();
 
     static MethodChannel channel;
-    private Activity activity;
 
-    private static FlutterBleLibPlugin factory(Context context, Activity activity) {
-        FlutterBleLibPlugin plugin = new FlutterBleLibPlugin();
-        plugin.context = context;
-        plugin.activity = activity;
-        return plugin;
-    }
+    // private static FlutterBleLibPlugin factory(Context context, Activity activity) {
+    //     FlutterBleLibPlugin plugin = new FlutterBleLibPlugin();
+    //     plugin.context = context;
+    //     plugin.activity = activity;
+    //     return plugin;
+    // }
 
     /**
      * Initializes the plugin.
@@ -74,7 +74,7 @@ public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, Ac
      * @param context       registrar.context() or binding.getApplicationContext()
      * @param messenger     registrar.messenger() or binding.getBinaryMessenger()
      */
-    private static void init(Context context, BinaryMessenger messenger, Activity activity) {
+    private void init(Context context, BinaryMessenger messenger, Activity activity) {
         channel = new MethodChannel(messenger, ChannelName.FLUTTER_BLE_LIB);
 
         final EventChannel bluetoothStateChannel = new EventChannel(messenger, ChannelName.ADAPTER_STATE_CHANGES);
@@ -94,9 +94,9 @@ public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, Ac
         characteristicMonitorChannel.setStreamHandler(plugin.characteristicsMonitorStreamHandler);
     }
 
-    public static void registerWith(Registrar registrar) {
-        init(registrar.context(), registrar.messenger(), registrar.activity());
-    }
+    // public static void registerWith(Registrar registrar) {
+    //     init(registrar.context(), registrar.messenger(), registrar.activity());
+    // }
 
     private void setupAdapter(Context context) {
         bleAdapter = BleAdapterFactory.getNewAdapter(context);
@@ -109,6 +109,11 @@ public class FlutterBleLibPlugin implements MethodCallHandler, FlutterPlugin, Ac
         delegates.add(new CharacteristicsDelegate(bleAdapter, characteristicsMonitorStreamHandler));
         delegates.add(new DevicesDelegate(bleAdapter));
         delegates.add(new DescriptorsDelegate(bleAdapter));
+    }
+
+    // 添加默认的无参构造函数（如果原来没有的话）
+    public FlutterBleLibPlugin() {
+        // 空构造函数，不需要任何内容
     }
 
     @Override

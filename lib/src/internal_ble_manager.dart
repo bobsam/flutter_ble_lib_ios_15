@@ -20,11 +20,12 @@ class InternalBleManager
   Future<void> createClient({
     String? restoreStateIdentifier,
     RestoreStateAction? restoreStateAction,
-  }) {
+  }) async {  // 添加 async
     if (restoreStateAction != null) {
-      _bleLib.restoredState().then((devices) {
+      // 使用 unawaited 避免警告
+      unawaited(_bleLib.restoredState().then((devices) {
         restoreStateAction(devices);
-      });
+      }));
     }
     return _bleLib.createClient(restoreStateIdentifier);
   }

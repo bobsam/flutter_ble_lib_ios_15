@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_ble_lib_ios_15'
-  s.version          = '2.6.0'
+  s.version          = '3.1.0'
   s.summary          = 'A new flutter plugin project.'
   s.description      = <<-DESC
 A new flutter plugin project.
@@ -15,9 +15,14 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h' 
   s.dependency 'Flutter'
-  s.swift_versions = ['4.0', '4.2', '5.0']
+  s.swift_versions = ['5.0']
   s.dependency 'MultiplatformBleAdapter', '~> 0.1.9'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '11.0'
+
+  # 添加隐私清单
+  s.resource_bundles = {
+    'flutter_ble_lib_ios_15_privacy' => ['Resources/PrivacyInfo.xcprivacy']
+  }
 end
 
